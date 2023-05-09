@@ -18,8 +18,11 @@
             </ul>
         </div>
     </div>
+
     <!-- Bootstrap JS -->
 <script th:src="@{/bootstrap.min.js}"></script>
+<!-- 자바스크립트 Start -->
+
 </nav>
 <div class="container my-3">
  <h2 class="border-bottom py-2" th:text="${board.subject}"></h2>
@@ -39,8 +42,11 @@
                 sec:authorize="isAuthenticated()"
                 th:if="${board.author != null and #authentication.getPrincipal().getUsername() == board.author.username}"
                 th:text="수정"></a>
-
-
+ 		<a th:href="@{|/board/delete/${board.id}|}" class="btn btn-sm btn-outline-secondary"
+                sec:authorize="isAuthenticated()"
+                th:if="${board.author != null and #authentication.getPrincipal().getUsername() == board.author.username}"
+                th:text="삭제"></a>
+	
 
         </div>
     </div>

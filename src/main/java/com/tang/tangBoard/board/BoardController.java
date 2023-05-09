@@ -4,21 +4,13 @@ package com.tang.tangBoard.board;
 
 import java.io.IOException;
 import java.security.Principal;
-<<<<<<< HEAD
-import java.util.List;
-=======
 
->>>>>>> 7d01f6b (게시판 만들기 수정)
 
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-<<<<<<< HEAD
-import org.springframework.http.HttpStatusCode;
-=======
 
->>>>>>> 7d01f6b (게시판 만들기 수정)
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -110,7 +102,16 @@ public class BoardController {
 		        return String.format("redirect:/board/detail/%s", id);
 		    }
 		
-		
+		 	 @PreAuthorize("isAuthenticated()")
+		     @GetMapping("/delete/{id}")
+		     public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
+		         Board question = this.boardService.getBoard(id);
+		         if (!question.getAuthor().getUsername().equals(principal.getName())) {
+		             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+		         }
+		         this.boardService.delete(question);
+		         return "redirect:/";
+		     }
 		
 		
 }
