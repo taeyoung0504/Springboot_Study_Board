@@ -18,11 +18,8 @@
             </ul>
         </div>
     </div>
-
     <!-- Bootstrap JS -->
 <script th:src="@{/bootstrap.min.js}"></script>
-<!-- 자바스크립트 Start -->
-
 </nav>
 <div class="container my-3">
  <h2 class="border-bottom py-2" th:text="${board.subject}"></h2>
@@ -38,16 +35,20 @@
                 </div>
             </div>
               <div class="my-3">
+				    <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+                th:data-uri="@{|/board/vote/${board.id}|}">
+                추천
+                <span class="badge rounded-pill bg-success" th:text="${#lists.size(board.voter)}"></span>
+            </a>
             <a th:href="@{|/board/modify/${board.id}|}" class="btn btn-sm btn-outline-secondary"
                 sec:authorize="isAuthenticated()"
                 th:if="${board.author != null and #authentication.getPrincipal().getUsername() == board.author.username}"
                 th:text="수정"></a>
- 		<a th:href="@{|/board/delete/${board.id}|}" class="btn btn-sm btn-outline-secondary"
+                <a th:href="@{|/board/delete/${board.id}|}" class="btn btn-sm btn-outline-secondary"
                 sec:authorize="isAuthenticated()"
                 th:if="${board.author != null and #authentication.getPrincipal().getUsername() == board.author.username}"
-                th:text="삭제"></a>
-	
-
+                th:text="삭제"]></a>
+               
         </div>
     </div>
     <div th:if="${board.filename}">
@@ -58,7 +59,8 @@
         </div>
     </div>
     </div>
-<h5 class="border-bottom my-3 py-2" th:text="|${#lists.size(board.comentList)}개의 답변이 있습니다.|"></h5>
+  <h5 class="border-bottom my-3 py-2" 
+        th:text="|${#lists.size(board.comentList)}개의 답변이 있습니다.|"></h5>
     <!-- 답변 반복 시작 -->
     <div class="card my-3" th:each="coment : ${board.comentList}">
         <div class="card-body">
