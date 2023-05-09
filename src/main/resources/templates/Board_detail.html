@@ -1,0 +1,77 @@
+<link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">SBB</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/signup}">회원가입</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+<script th:src="@{/bootstrap.min.js}"></script>
+</nav>
+<div class="container my-3">
+ <h2 class="border-bottom py-2" th:text="${board.subject}"></h2>
+  <div class="card my-3">
+        <div class="card-body">
+ <div class="card-text" style="white-space: pre-line;" th:text="${board.content}"></div>
+  <div class="d-flex justify-content-end">
+	   <div class="badge bg-light text-dark p-2 text-start">
+		   <div class="mb-2">
+                    <span th:if="${board.author != null}" th:text="${board.author.username}"></span>
+                </div>
+                    <div th:text="${#temporals.format(board.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+            </div>
+              <div class="my-3">
+            <a th:href="@{|/board/modify/${board.id}|}" class="btn btn-sm btn-outline-secondary"
+                sec:authorize="isAuthenticated()"
+                th:if="${board.author != null and #authentication.getPrincipal().getUsername() == board.author.username}"
+                th:text="수정"></a>
+
+
+
+        </div>
+    </div>
+    <div th:if="${board.filename}">
+    <h5>첨부파일</h5>
+    <div class="card my-3">
+        <div class="card-body">
+ 		<a th:href="@{|/board/download/${board.id}|}" th:text="${board.filename}"></a>
+        </div>
+    </div>
+    </div>
+<h5 class="border-bottom my-3 py-2" th:text="|${#lists.size(board.comentList)}개의 답변이 있습니다.|"></h5>
+    <!-- 답변 반복 시작 -->
+    <div class="card my-3" th:each="coment : ${board.comentList}">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;" th:text="${coment.content}"></div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2 text-start">
+					  <div class="mb-2">
+                    <span th:if="${coment.author != null}" th:text="${coment.author.username}"></span>
+                </div>
+                    <div th:text="${#temporals.format(coment.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 답변 반복 끝  -->
+    <!-- 답변 작성 -->
+    <form th:action="@{|/coment/create/${board.id}|}" th:object="${board}"method="post" class="my-3">
+       <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control" rows="10"></textarea>
+        <textarea sec:authorize="isAuthenticated()" th:field="*{content}" class="form-control" rows="10"></textarea>
+        <input type="submit" value="답변등록" class="btn btn-primary my-2">
+    </form>
+</div>
